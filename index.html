@@ -1,0 +1,151 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Alchemyst's Arrows</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <h1>Alchemyst's Arrows</h1>
+
+    <p>
+        El objetivo es conectar elementos desde las fuentes para crear reacciones y eliminar a todos los enemigos.
+    </p>
+
+    <div id="toolbar"></div>
+
+    <div id="board"></div>
+
+    <div id="rules">
+        <h2>📜 Reglas</h2>
+
+        <h3>Elementos</h3>
+
+        <ul>
+            <li>
+                <span style="color:#4ea6ff;">
+                    Agua (5)
+                </span>
+                - Conduce electricidad y apaga el fuego.
+            </li>
+
+            <li>
+                <span style="color:#00e5ff;">
+                    Rayo (7)
+                </span>
+                - Se propaga por el agua y elimina enemigos mojados.
+            </li>
+
+            <li>
+                <span style="color:#c68b3c;">
+                    Grasa (11)
+                </span>
+                - Propaga el fuego.
+            </li>
+
+            <li>
+                <span style="color:#ff5c5c;">
+                    Fuego (13)
+                </span>
+                - Quema grasa y elimina enemigos engrasados.
+            </li>
+        </ul>
+
+        <h3>Enemigos</h3>
+
+        <ul>
+            <li>
+                <span style="color:#c0392b;">
+                    Enemigo (3)
+                </span>
+            </li>
+
+            <li>
+                <span style="color:#6ec6ff;">
+                    Enemigo Mojado (17)
+                </span>
+                - Vulnerable al rayo.
+            </li>
+
+            <li>
+                <span style="color:#d4a15a;">
+                    Enemigo Engrasado (29)
+                </span>
+                - Vulnerable al fuego.
+            </li>
+
+            <li>
+                <span style="color:#7f8c8d;">
+                    Enemigo Arruinado (31)
+                </span>
+                - No puede ser eliminado.
+            </li>
+        </ul>
+
+        <h3>Reacciones</h3>
+
+        <ul>
+            <li>
+                Agua (5) + Rayo (7) → Electricidad en cadena.
+            </li>
+
+            <li>
+                Agua (5) + Fuego (13) → Ambos desaparecen.
+            </li>
+
+            <li>
+                Fuego (13) + Rayo (7) → Explosión.
+            </li>
+
+            <li>
+                Fuego (13) + Grasa (11) → Incendio en cadena.
+            </li>
+        </ul>
+
+        <h3>Fuentes</h3>
+
+        <ul>
+            <li>
+                <span style="color:#66ff88;">
+                    Fuente A (19)
+                </span>
+                - Puede conectarse a un único elemento.
+            </li>
+
+            <li>
+                <span style="color:#ff66ff;">
+                    Fuente B (23)
+                </span>
+                - Puede conectarse a un único elemento.
+            </li>
+
+            <li>
+                Seleccioná un elemento y luego hacé clic en una fuente para asignarlo.
+            </li>
+
+            <li>
+                Una vez asignado, el elemento no puede cambiarse.
+            </li>
+
+            <li>
+                Los elementos se expanden desde las fuentes y sus conexiones.
+            </li>
+        </ul>
+
+        <h3>Victoria</h3>
+
+        <p>
+            🏆 Eliminá todos los enemigos para completar el nivel.
+        </p>
+    </div>
+
+    <script src="levels.js"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,100 @@
+body {
+  font-family: Arial, sans-serif;
+  background: #242833;
+  color: white;
+  text-align: center;
+}
+
+h1 {
+  margin-top: 20px;
+}
+
+#toolbar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+
+button {
+  width: 140px;
+  height: 48px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: #3a4050;
+  color: white;
+
+  cursor: pointer;
+
+  transition: 0.15s;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+
+.selectedTool {
+  box-shadow: 0 0 0 3px white;
+}
+
+#board {
+  display: grid;
+  grid-template-columns: repeat(7, 60px);
+
+  gap: 2px;
+
+  justify-content: center;
+
+  margin: 20px auto;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  font-weight: bold;
+
+  transition: 0.15s;
+}
+
+.cell:hover {
+  transform: scale(1.05);
+}
+
+#message {
+  min-height: 40px;
+  margin-top: 20px;
+}
+
+.activeSource {
+  box-shadow: 0 0 0 4px white;
+}
+
+#rules {
+  max-width: 700px;
+  margin: 30px auto;
+  text-align: left;
+  line-height: 1.6;
+}
+
+#rules h2,
+#rules h3 {
+  color: white;
+}
+
+#rules ul {
+  padding-left: 20px;
+}
+
+#rules li {
+  margin-bottom: 8px;
+}
