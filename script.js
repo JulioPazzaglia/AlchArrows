@@ -19,6 +19,9 @@ const GREASE = 11;
 const FIRE = 13;
 const WATER_GREASE = 55;
 
+//Mixes
+const FIRE_LIGHTNING = 91;
+
 //Sources
 const SOURCE_A = 19;
 const SOURCE_B = 23;
@@ -259,6 +262,16 @@ function placeElement(row, col, element) {
   //resolveReaction(row, col);
 }
 
+function applyElement(row, col, element) {
+  const currentValue = nextState[row][col];
+
+  if (currentValue % element === 0) {
+    return;
+  }
+
+  nextState[row][col] = currentValue * element;
+}
+
 // ====================
 // REACTIONS
 // ====================
@@ -273,7 +286,6 @@ function resolveReaction(row, col) {
     // Wet Enemy or Greased enemy + Grease or Water
     case 165:
       nextState[row][col] = FAILED_ENEMY;
-      //board[row][col] = FAILED_ENEMY;
       break;
 
     //Enemy Kills
@@ -299,29 +311,22 @@ function resolveReaction(row, col) {
 
     //Water + Lightning
     case 35:
+      spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
       nextState[row][col] = LIGHTNING;
-      //board[row][col] = LIGHTNING;
-
-      //spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
       break;
     //Water + Fire
     case 65:
       nextState[row][col] = EMPTY;
-      //board[row][col] = EMPTY;
       break;
     //Fire + Lightning
-    case 91:
+    case FIRE_LIGHTNING:
       nextState[row][col] = EMPTY;
-      //board[row][col] = EMPTY;
-
-      //spreadExplosion(row, col);
+      spreadExplosion(row, col);
       break;
     //Fire + Grease
     case 143:
+      spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
       nextState[row][col] = FIRE;
-      //board[row][col] = FIRE;
-
-      //spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
       break;
     //Water + Grease
     case WATER_GREASE:
@@ -329,32 +334,29 @@ function resolveReaction(row, col) {
     //Water + Grease + Lightning
     case 385:
       nextState[row][col] = LIGHTNING;
-      //board[row][col] = LIGHTNING;
-      //spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
+      spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
       break;
     //Water + Grease + Fire
     case 715:
       nextState[row][col] = FIRE;
-      //board[row][col] = FIRE;
-      //spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
+      spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
       break;
     //Water + Grease + Fire + Lightning
     case 5005:
+      nextState[row][col] = FIRE_LIGHTNING;
       break;
     //Water + Grease duplicados
     case 275:
       nextState[row][col] = WATER_GREASE;
-      //board[row][col] = WATER_GREASE;
       break;
 
     case 605:
       nextState[row][col] = WATER_GREASE;
-      //board[row][col] = WATER_GREASE;
       break;
 
     //default case for unhandled reactions
     default:
-      console.error(`Unhandled case: ${value}`);
+      break;
   }
 }
 
@@ -363,7 +365,7 @@ function spreadChain(row, col, fuels, spreadElement) {
 
   for (const [nRow, nCol] of neighbors) {
     if (fuels.includes(board[nRow][nCol])) {
-      placeElement(nRow, nCol, spreadElement);
+      applyElement(nRow, nCol, spreadElement);
     }
   }
 }
@@ -373,7 +375,7 @@ function spreadExplosion(row, col) {
 
   for (const [nRow, nCol] of neighbors) {
     if (isFlammable(board[nRow][nCol])) {
-      placeElement(nRow, nCol, FIRE);
+      applyElement(nRow, nCol, FIRE);
     }
   }
 }
@@ -391,7 +393,7 @@ function resolveBoard() {
   for (let row = 0; row < board.length; row++) {
     board[row] = [...nextState[row]];
   }
-
+  checkVictory();
   renderBoard();
 }
 
@@ -537,6 +539,9 @@ function getCellClass(value) {
     case 143:
       return "primed-grease-fire";
 
+    case FIRE_LIGHTNING:
+      return "cell-fire-lightning";
+
     default:
       return "cell-unknown";
   }
@@ -581,10 +586,9 @@ function createToolbar() {
 // ====================
 
 function killEnemy(row, col) {
-  board[row][col] = EMPTY;
-
-  checkVictory();
+  nextState[row][col] = EMPTY;
 }
+
 function checkVictory() {
   for (let row = 0; row < board.length; row++) {
     for (let col = 0; col < board[row].length; col++) {
@@ -611,3 +615,35 @@ function isEnemy(value) {
 
 createToolbar();
 renderBoard();
+
+// ==========================================================
+// TODO - Next Milestones
+// ==========================================================
+//
+// The Conway-style reaction system is now working:
+//
+// - Player placement and Resolve are separated.
+// - Reactions are processed simultaneously using nextState.
+// - Chain propagation works one tick at a time.
+// - Multiple reactions can affect the same cell during the same tick.
+//
+// Before adding new mechanics, finish these core systems:
+//
+// 1. NETWORK CONNECTIVITY
+//    Networks currently recognize only stable tiles.
+//    Primed states (35, 143, 385, 715, etc.) should also count as part
+//    of the network so the player can continue building through them.
+//
+//    Enemy states (Wet / Greased) should eventually behave the same.
+//
+// 2. ELEMENT LIMITS
+//    Each level should define how many tiles of each element the player
+//    is allowed to place.
+//
+// 3. MULTI-ELEMENT SOURCES
+//    Allow a Source to provide more than one element.
+//    This should be configurable per level (e.g. maxElementsPerSource = 2).
+//
+// After these systems are complete, the engine should be ready to start
+// designing levels and adding new mechanics.
+// ==========================================================
