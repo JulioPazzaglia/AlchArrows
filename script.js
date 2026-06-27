@@ -8,8 +8,8 @@ const WALL = 2;
 
 //Enemy
 const ENEMY = 3;
-const WET_ENEMY = 17;
-const GREASED_ENEMY = 29;
+const WET_ENEMY = 15;
+const GREASED_ENEMY = 33;
 const FAILED_ENEMY = 31;
 
 //Elements
@@ -78,6 +78,8 @@ const board = level1;
 const boardElement = document.getElementById("board");
 
 const toolbarElement = document.getElementById("toolbar");
+
+document.getElementById("resolveButton").onclick = resolveBoard;
 
 // ====================
 // FUNCTIONS
@@ -227,7 +229,12 @@ function belongsToNetwork(value, networkElement) {
 // ====================
 
 function isPlaceable(value) {
-  return value !== WALL && value !== SOURCE_A && value !== SOURCE_B;
+  return (
+    value !== WALL &&
+    value !== SOURCE_A &&
+    value !== SOURCE_B &&
+    value !== WATER_GREASE
+  );
 }
 function placeElement(row, col, element) {
   const currentValue = board[row][col];
@@ -249,7 +256,7 @@ function placeElement(row, col, element) {
 
   board[row][col] = currentValue * element;
 
-  resolveReaction(row, col);
+  //resolveReaction(row, col);
 }
 
 // ====================
@@ -263,23 +270,10 @@ function resolveReaction(row, col) {
   const value = board[row][col];
 
   switch (value) {
-    //Enemy status
-    // Enemy + Water
-    case 15:
-      board[row][col] = WET_ENEMY;
-      break;
-    // Enemy + Grease
-    case 33:
-      board[row][col] = GREASED_ENEMY;
-      break;
-
-    // Wet Enemy + Grease
-    case 187:
-      board[row][col] = FAILED_ENEMY;
-      break;
-    // Greased Enemy + Water
-    case 145:
-      board[row][col] = FAILED_ENEMY;
+    // Wet Enemy or Greased enemy + Grease or Water
+    case 165:
+      nextState[row][col] = FAILED_ENEMY;
+      //board[row][col] = FAILED_ENEMY;
       break;
 
     //Enemy Kills
@@ -293,11 +287,11 @@ function resolveReaction(row, col) {
       killEnemy(row, col);
       break;
     //Wet Enemy + Lightning
-    case 119:
+    case 105:
       killEnemy(row, col);
       break;
     //Greased Enemy + Fire
-    case 377:
+    case 429:
       killEnemy(row, col);
       break;
 
@@ -305,49 +299,57 @@ function resolveReaction(row, col) {
 
     //Water + Lightning
     case 35:
-      board[row][col] = LIGHTNING;
+      nextState[row][col] = LIGHTNING;
+      //board[row][col] = LIGHTNING;
 
-      spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
+      //spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
       break;
     //Water + Fire
     case 65:
-      board[row][col] = EMPTY;
+      nextState[row][col] = EMPTY;
+      //board[row][col] = EMPTY;
       break;
     //Fire + Lightning
     case 91:
-      board[row][col] = EMPTY;
+      nextState[row][col] = EMPTY;
+      //board[row][col] = EMPTY;
 
-      spreadExplosion(row, col);
+      //spreadExplosion(row, col);
       break;
     //Fire + Grease
     case 143:
-      board[row][col] = FIRE;
+      nextState[row][col] = FIRE;
+      //board[row][col] = FIRE;
 
-      spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
+      //spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
       break;
     //Water + Grease
     case WATER_GREASE:
       break;
     //Water + Grease + Lightning
     case 385:
-      board[row][col] = LIGHTNING;
-      spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
+      nextState[row][col] = LIGHTNING;
+      //board[row][col] = LIGHTNING;
+      //spreadChain(row, col, [WATER, WET_ENEMY, WATER_GREASE], LIGHTNING);
       break;
     //Water + Grease + Fire
     case 715:
-      board[row][col] = FIRE;
-      spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
+      nextState[row][col] = FIRE;
+      //board[row][col] = FIRE;
+      //spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
       break;
     //Water + Grease + Fire + Lightning
     case 5005:
       break;
     //Water + Grease duplicados
     case 275:
-      board[row][col] = WATER_GREASE;
+      nextState[row][col] = WATER_GREASE;
+      //board[row][col] = WATER_GREASE;
       break;
 
     case 605:
-      board[row][col] = WATER_GREASE;
+      nextState[row][col] = WATER_GREASE;
+      //board[row][col] = WATER_GREASE;
       break;
 
     //default case for unhandled reactions
@@ -374,6 +376,23 @@ function spreadExplosion(row, col) {
       placeElement(nRow, nCol, FIRE);
     }
   }
+}
+
+let nextState = null;
+function resolveBoard() {
+  nextState = board.map((row) => [...row]);
+
+  for (let row = 0; row < board.length; row++) {
+    for (let col = 0; col < board[row].length; col++) {
+      resolveReaction(row, col);
+    }
+  }
+
+  for (let row = 0; row < board.length; row++) {
+    board[row] = [...nextState[row]];
+  }
+
+  renderBoard();
 }
 
 // ====================
@@ -513,6 +532,10 @@ function getCellClass(value) {
 
     case SOURCE_B:
       return "cell-source-b";
+    case 35:
+      return "primed-water-lightning";
+    case 143:
+      return "primed-grease-fire";
 
     default:
       return "cell-unknown";
