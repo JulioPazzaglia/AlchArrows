@@ -76,7 +76,7 @@ button:hover {
 }
 
 .activeSource {
-  box-shadow: 0 0 0 4px white;
+  filter: drop-shadow(0 0 4px white);
 }
 
 #rules {
@@ -97,4 +97,67 @@ button:hover {
 
 #rules li {
   margin-bottom: 8px;
+}
+.cell-empty {
+  background: #727b91;
+}
+
+.cell-wall {
+  background: #2f3442;
+}
+
+.cell-enemy {
+  background: #c0392b;
+}
+
+.cell-water {
+  background: #727b91;
+  box-shadow: inset 0 0 0 3px #00e5ff;
+}
+
+.cell-lightning {
+  background: #00e5ff;
+}
+
+.cell-grease {
+  background: #727b91;
+  box-shadow: inset 0 0 0 3px #ff5c5c;
+}
+
+.cell-fire {
+  background: #ff5c5c;
+}
+
+.cell-wet-enemy {
+  background: #c0392b;
+  box-shadow: inset 0 0 0 3px #00e5ff;
+}
+
+.cell-greased-enemy {
+  background: #c0392b;
+  box-shadow: inset 0 0 0 3px #ff5c5c;
+}
+
+.cell-failed-enemy {
+  background: #7f8c8d;
+}
+
+.cell-water-grease {
+  background: #727b91;
+
+  box-shadow:
+    inset 0 0 0 3px #00e5ff,
+    inset 0 0 0 6px #ff5c5c;
+}
+
+.cell-source-a {
+  background: #66ff88;
+}
+
+.cell-source-b {
+  background: #ff66ff;
+}
+
+.cell-unknown {
+  background: #888888;
 }

@@ -149,7 +149,21 @@ function renderBoard() {
         }
       };
 
-      cell.style.backgroundColor = getColor(value);
+      cell.className = "cell";
+
+      if (value === activeSource) {
+        cell.classList.add("activeSource");
+      }
+
+      cell.classList.add(getCellClass(value));
+
+      if (value === SOURCE_A && networkA.element) {
+        cell.classList.add(getCellClass(networkA.element));
+      }
+
+      if (value === SOURCE_B && networkB.element) {
+        cell.classList.add(getCellClass(networkB.element));
+      }
 
       cell.textContent = value;
 
@@ -442,6 +456,52 @@ function getColor(value) {
 
     default:
       return COLORS.UNKNOWN;
+  }
+}
+
+function getCellClass(value) {
+  switch (value) {
+    case EMPTY:
+      return "cell-empty";
+
+    case WALL:
+      return "cell-wall";
+
+    case ENEMY:
+      return "cell-enemy";
+
+    case WATER:
+      return "cell-water";
+
+    case LIGHTNING:
+      return "cell-lightning";
+
+    case GREASE:
+      return "cell-grease";
+
+    case FIRE:
+      return "cell-fire";
+
+    case WET_ENEMY:
+      return "cell-wet-enemy";
+
+    case GREASED_ENEMY:
+      return "cell-greased-enemy";
+
+    case FAILED_ENEMY:
+      return "cell-failed-enemy";
+
+    case WATER_GREASE:
+      return "cell-water-grease";
+
+    case SOURCE_A:
+      return "cell-source-a";
+
+    case SOURCE_B:
+      return "cell-source-b";
+
+    default:
+      return "cell-unknown";
   }
 }
 
