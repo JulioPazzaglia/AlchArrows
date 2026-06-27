@@ -192,6 +192,17 @@ function isAdjacentToActiveNetwork(row, col) {
 
   return false;
 }
+
+// TODO:
+// belongsToNetwork() currently validates only by element type.
+//
+// This allows pre-placed tiles (e.g. WATER_GREASE)
+// to be treated as part of any compatible network,
+// even if they are not actually connected to the active Source.
+//
+// When Resolve + network propagation is implemented,
+// this should be replaced by a connectivity check
+// starting from the active Source.
 function belongsToNetwork(value, networkElement) {
   if (value === networkElement) {
     return true;
@@ -326,6 +337,9 @@ function resolveReaction(row, col) {
     case 715:
       board[row][col] = FIRE;
       spreadChain(row, col, [GREASE, GREASED_ENEMY, WATER_GREASE], FIRE);
+      break;
+    //Water + Grease + Fire + Lightning
+    case 5005:
       break;
     //Water + Grease duplicados
     case 275:
