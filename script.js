@@ -343,7 +343,8 @@ function resolveReaction(row, col) {
       break;
     //Water + Grease + Fire + Lightning
     case 5005:
-      nextState[row][col] = FIRE_LIGHTNING;
+      nextState[row][col] = EMPTY;
+      spreadExplosion(row, col);
       break;
     //Water + Grease duplicados
     case 275:
@@ -534,12 +535,20 @@ function getCellClass(value) {
 
     case SOURCE_B:
       return "cell-source-b";
+
     case 35:
       return "primed-water-lightning";
+
+    case 715:
+      return "primed-grease-fire";
+
     case 143:
       return "primed-grease-fire";
 
     case FIRE_LIGHTNING:
+      return "cell-fire-lightning";
+
+    case 5005:
       return "cell-fire-lightning";
 
     default:
