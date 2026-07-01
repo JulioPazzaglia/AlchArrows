@@ -42,7 +42,6 @@ button:hover {
 
 #board {
   display: grid;
-  grid-template-columns: repeat(7, 60px);
 
   gap: 2px;
 
