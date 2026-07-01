@@ -95,6 +95,8 @@ document.getElementById("resolveButton").onclick = resolveBoard;
 function renderBoard() {
   boardElement.innerHTML = "";
 
+  boardElement.style.gridTemplateColumns = `repeat(${board[0].length}, 60px)`;
+
   for (let row = 0; row < board.length; row++) {
     for (let col = 0; col < board[row].length; col++) {
       const cell = document.createElement("div");
