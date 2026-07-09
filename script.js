@@ -28,7 +28,7 @@ const SOURCE_B = 23;
 
 const elements = [WATER, LIGHTNING, GREASE, FIRE];
 
-const placeableElements = [/*WATER, LIGHTNING,*/ GREASE /*, FIRE*/];
+const placeableElements = [WATER, /* LIGHTNING,*/ GREASE /*, FIRE*/];
 
 // Colors
 const COLORS = {
